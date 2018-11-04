@@ -1,0 +1,29 @@
+q0 sign dec zero octa hexa binar unsign1 unsign2 unsign3 long1 long2 long3 long4
+0 1 2 3 4 5 6 7 8 9 a b c d e f A B C D E F + - b l u x B L U X
+q0
+dec zero octa hexa binar unsign1 unsign2 unsign3 long1 long2 long3 long4
+q0 sign +|-
+q0 dec 1|2|3|4|5|6|7|8|9
+q0 zero 0
+dec dec 0|1|2|3|4|5|6|7|8|9
+dec unsign1 u|U
+dec long1 l|L
+sign dec 1|2|3|4|5|6|7|8|9
+sign zero 0
+octa octa 0|1|2|3|4|5|6|7
+octa unsign1 u|U
+octa long1 l|L
+zero hexa x|X
+hexa hexa 0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f|A|B|C|D|E|F
+hexa unsign1 u|U
+hexa long1 l|L
+zero binar b|B
+binar binar 1|0
+binar unsign1 u|U
+binar long1 l|L
+long1 long2 l|L
+long2 unsign2 u|U
+unsign1 long3 l|L
+long3 long4 l|L
+zero octa 0|1|2|3|4|5|6|7
+long1 unsign3 u|U
