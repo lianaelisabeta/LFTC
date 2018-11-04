@@ -15,7 +15,7 @@ public class AnalizorLexical {
     private FIP fip;
     private TS ts;
     private CodificareAtomi codificareAtomi;
-    private List<Integer> pozitii = new ArrayList<>();
+   // private List<Integer> pozitii = new ArrayList<>();
 
 
     public AnalizorLexical(){
@@ -29,7 +29,6 @@ public class AnalizorLexical {
 
     public void getAtomi(String filename){
         int l=1;
-        List<Atom> atoms= new ArrayList<>();
 
         try (BufferedReader br = new BufferedReader(new FileReader(filename))) {
             String st;
@@ -47,9 +46,9 @@ public class AnalizorLexical {
                             tokens[i]+=tokens[i+1];
 
                             int cod = codificareAtomi.getCod(tokens[i]+tokens[i+1]);
-                            atoms.add(new Atom(tokens[i], cod, l));
-                            fip.addToFIP(cod,-1);
-                            i++;
+                            atomi.add(new Atom(tokens[i], cod, l));
+
+                            i=i+2;
                         }
 
                         if (simboluriSpeciale.eSeparator(tokens[i]) || simboluriSpeciale.eCuvantRezervat(tokens[i]) || simboluriSpeciale.eOperator(tokens[i])) {
@@ -57,30 +56,23 @@ public class AnalizorLexical {
                             boolean ok= false;
 
                             int cod = codificareAtomi.getCod(tokens[i]);
-                            atoms.add(new Atom(tokens[i], cod, l));
-                            fip.addToFIP(cod,-1);
+                            atomi.add(new Atom(tokens[i], cod, l));
+
 
                         }
                         else if(eIdentificator(tokens[i])){
                             if(tokens[i].length()>8){
                                 throw new MyExc("Identificator too long at line :"+l+". Lenght should be < than 8 characters.");
                             }
-                            if(ts.getTS(tokens[i])==-1){
-                                ts.adaugaTS(tokens[i]);
-                            }
-                            pozitii.add(fip.getSize());
-                            fip.addToFIP(1,ts.getTS(tokens[i]));
 
-                            atoms.add(new Atom(tokens[i],l));}
+
+                            atomi.add(new Atom(tokens[i],1,l));
+                            ts.adaugaTS(tokens[i]);
+                        }
                          else if(eConstanta(tokens[i])){
-                            if(ts.getTS(tokens[i])==-1){
-                                ts.adaugaTS(tokens[i]);
 
-                            }
-                            pozitii.add(fip.getSize());
-                            fip.addToFIP(0,ts.getTS(tokens[i]));
-
-                            atoms.add(new Atom(tokens[i],l));
+                            atomi.add(new Atom(tokens[i],0,l));
+                            ts.adaugaTS(tokens[i]);
                         }
 
                         else{
@@ -89,8 +81,8 @@ public class AnalizorLexical {
                                 String s = tokens[i] + tokens[i+1]+tokens[i+2]+tokens[i+3];
                                 if(simboluriSpeciale.eCuvantRezervat(s))
                                 {int cod = codificareAtomi.getCod(s);
-                                atoms.add(new Atom(s, cod, l));
-                                fip.addToFIP(cod,-1);
+                                atomi.add(new Atom(s, cod, l));
+
                                 i=i+3;
                                 ok=true;
                                 }
@@ -99,8 +91,8 @@ public class AnalizorLexical {
                                 String s = tokens[i] + tokens[i+1]+tokens[i+2]+tokens[i+3];
                                 if(simboluriSpeciale.eCuvantRezervat(s))
                                 {int cod = codificareAtomi.getCod(s);
-                                    atoms.add(new Atom(s, cod, l));
-                                    fip.addToFIP(cod,-1);
+                                    atomi.add(new Atom(s, cod, l));
+
                                     i=i+3;
                                     ok=true;
                                 }
@@ -113,28 +105,19 @@ public class AnalizorLexical {
                l++;
 
             }
-        atomi=atoms;
 
     }
         catch (IOException e){
             throw new MyExc("Fisier invalid.");
         }
-
-
-        for(int i =0;i<pozitii.size();i++){
-            int cod =-1;
-
-            if(eConstanta(ts.getPoz(i))){
-                cod =0;
-
-            }
-            else if (eIdentificator(ts.getPoz(i))){
-                cod = 1;
-            }
-            fip.setToFIP(pozitii.get(i),cod,ts.getTS(ts.getPoz(i)));
+        for(Atom atom : atomi){
+            int poz = ts.getTS(atom.getDenumire());
+            fip.addToFIP(atom.getCodAtom(),poz);
         }
 
     }
+
+
 
     public void printAtoms(String fileFIP, String fileTS){
         for(Atom a: atomi){

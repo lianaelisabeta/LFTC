@@ -7,13 +7,13 @@ import java.util.List;
 
 //forma interna a programului
 public class FIP {
-    private List<String> fip ;
+    private List<FIPElement> fip ;
     public FIP(){
         fip= new ArrayList<>();
     }
 
     public void addToFIP(Integer codAtom, Integer pozTS){
-        fip.add(""+codAtom+" "+pozTS);
+        fip.add(new FIPElement(codAtom,pozTS));
     }
 
     public int getSize(){
@@ -21,12 +21,12 @@ public class FIP {
     }
 
     public void setToFIP(Integer codAtom, Integer pozTS, int p){
-        fip.set(p,""+codAtom+" "+pozTS);
+        fip.set(p,new FIPElement(codAtom,pozTS));
     }
 
     public void writeToFileFIP(String filename ){
         try(PrintWriter pw= new PrintWriter(filename)){
-            for(String s : fip){
+            for(FIPElement s : fip){
                     pw.println(s);
 
             }
@@ -36,7 +36,7 @@ public class FIP {
         }
     }
     public void printFIP(){
-        for(String s : fip){
+        for(FIPElement s : fip){
             System.out.println(s);
 
         }

@@ -14,9 +14,10 @@ public class TS {
 
 
     public void adaugaTS(String simbol){
-        Integer codTs = tabela.size()+1;
-        tabela.add(simbol);
-        updateTable();
+        if(!tabela.contains(simbol))
+        {tabela.add(simbol);
+            updateTable();}
+
     }
 
     public Integer getTS(String idc){
