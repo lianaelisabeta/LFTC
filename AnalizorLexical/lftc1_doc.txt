@@ -1,0 +1,67 @@
+Definirea limbajului:
+
+ 1 .Definirea limbajului:
+  1.1 Alfabetul limbajului:
+  1.1.a. litere mari (A-Z) si mici (a-z) al alfabetului englez;
+      b. cifre zecimale (0-9);
+      c. caractere speciale .!?:,- " "
+  2.1 Lexic
+      a.simboluri speciale care reprezinta:
+	 - operatori + - * / = < <= == >= != >> <<
+	 - delimitatori { }  : ; ( ) [ ]
+	 - cuvinte rezervate
+		main, int, std::cin, while, std::cout, double, if, else, std::endl, #include<iostream>, char, std::string, #include<string>;
+
+      b.identificatori
+	   -succesiune de litere, cifre, primul caracter fiind
+	   obligatoriu caracter;
+	     identificator ::= litera | litera{litera}{cifra}
+	     litera ::= "a" | "b" | ... | "z" | "A" | "B" | . ..| "Z"
+	     cifra ::= "0" | "1" |...| "9"
+      c.constante
+	 1.intregi
+	      intreg ::= [semn]cifra_nenula{cifra} | "0"
+		semn::= "-"
+		cifra_nenula::= "1"|"2"|"3"|"4"|"5"...|"9"
+		cifra::= "0"|cifra_nenula
+
+	 2.caracter
+	     caracter::='litera'|'cifra'|'caracter_special'
+	 3.sir de caracter
+	      string::="sirdecaractere"
+	      sirdecaractere::=caract{sirdecaractere}
+	      caract:=litera|cifra|caracter_special
+	4. real
+		regula de constructie:
+		real ::= [semn] cifra+ "." cifra+
+		real ::= intreg "." cifra+
+
+ 2.2 Sintaxa limbajului:
+	Cuvintele - atomii lexicali predefiniti sunt scrise intre ghilimele:
+a) Reguli sintactice
+	program ::= "main" "(" ")" "{" decllist lista_instructiuni "}"
+	decllist::= decl ";" |decl ";" decllist
+	decl::= type " " IDENTIFICATOR | IDENTIFICATOR "=" CONST | IDENTIFICATOR "[" int_positiv "]"
+	type::= "int"|"char"|"double"|"string"
+	lista_instructiuni ::= instructiune | instructiune ";" lista_instructiuni
+	instructiune::= instructiune_simpla | instructiune_compusa
+	instructiune_simpla ::= atribuire | operatieIO
+	operatieIO::= op_citire | op_scriere
+	op_citire ::= "std::cin" ">>" IDENTIFICATOR | IDENTIFICATOR "[" index "]" ";"
+	op_scriere::="std::cout" "<<" IDENTIFICATOR | IDENTIFICATOR "[" index "]" | "std::endl" ";"
+	atribuire::= IDENTIFICATOR "=" expresie ";"
+	expresie::= termen {( "+" | "-") termen}
+	termen::= factor {( "*" | "/") factor}
+	factor::= "(" expresie ")" | IDENTIFICATOR | CONST | INDENTIFICATOR "[" index "]"
+	instructiune_compusa::= instr_while | instr_if
+	instr_while ::= "while" "(" conditie ")" "{" lista_instructiuni "}"
+	conditie ::= expresie op_relational expresie
+	instr_if::= "if" "(" conditie ")" "{" lista_instructiuni "}" [ "else" "{" lista_instructiuni "}"]
+
+	CONST ::= intreg|real|caracter|string
+	IDENTIFICATOR ::= litera | litera{litera}{cifra}
+	cifra ::= "0"|"1"..."9"
+	litera ::= "a"|"b"|..."z"|"A"|...|"Z"
+	op_relational::= "<" | "<=" | "=" | "!=" | ">=" | ">" | "=="
+	int_pozitiv::= cifra_nenula{cifra}
+	index ::= IDENTIFICATOR | int_pozitiv
