@@ -1,0 +1,32 @@
+#include<iostream>
+#include<string>
+main()
+{
+    int a;
+    int b;
+
+    std::string hello = "Hello";
+    std::cin>>a;
+    std::cin>>b;
+    std::cout<<hello;
+    if(a==0){
+       std::cout<<b;
+    }
+    else{
+        if(b==0){
+            std::cout<<a;
+        }
+        else{
+            while(a!=b){
+        if(a>b){
+            a=a-b;
+        }
+        else{
+            b=b-a;
+        }
+    }
+        std::cout<<a;
+        }
+    }
+
+}

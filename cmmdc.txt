@@ -1,0 +1,20 @@
+#include<iostream>
+#include<string>
+main()
+{
+	int nr;
+	int suma = 0;
+	char ch = 'a';
+	int x;
+	std::cin >> nr;
+	while (nr > 0) {
+		std::cin >> x;
+		suma = suma + x;
+		nr = nr - 1;
+	}
+	std::string aa = "a";
+	std::cout << aa;
+
+	std::cout << suma;
+
+}

@@ -1,0 +1,22 @@
+q0 chr1 chr2 chr3 str1 str2 str3 sign intN zeroN zeroP intP punct zec
+0 1 2 3 4 5 6 7 8 9 a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z . ! ? : , - ' "
+q0
+char3 str3 intN zeroP intP zec
+q0 char1 '
+char1 char2 0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|.|!|?|:|,|-
+char2 char3 '
+q0 str1 "
+str1 str2 0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|.|!|?|:|,|-
+str2 str2 0|1|2|3|4|5|6|7|8|9|a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z|A|B|C|D|E|F|G|H|I|J|K|L|M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|.|!|?|:|,|-
+str2 str3 "
+q0 sign -
+sign intN 1|2|3|4|5|6|7|8|9
+intN intN 0|1|2|3|4|5|6|7|8|9
+intN punct .
+sign zeroN 0
+zeroN punct .
+q0 zeroP 0
+q0 intP 0|1|2|3|4|5|6|7|8|9
+intP punct .
+punct zec 0|1|2|3|4|5|6|7|8|9
+zec zec 0|1|2|3|4|5|6|7|8|9
