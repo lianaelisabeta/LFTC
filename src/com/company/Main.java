@@ -44,11 +44,12 @@ public class Main {
             System.out.println(first);
         }*/
 
-        List<String> follows = slr.getFollow("EXPRESIE");
+        //List<String> follows = slr.getFollow("EXPRESIE");
 
-        for(String follow : follows){
-            System.out.println(follow);
-        }
+//        for(String follow : follows){
+//            System.out.println(follow);
+//        }
+        slr.getClosureTest();
 
     }
 }

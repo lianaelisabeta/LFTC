@@ -12,7 +12,8 @@ public class SLR {
     private Gramatica gramatica;
     private int nextStateIndex;
     private AF automat;
-    private List<Map<String, List<String>>> states;
+    private List<List<StareProductie>> colectiiCanonice;
+    private List<Map<String, List<String>>> states; // tabel
 
     public SLR(Gramatica gramatica) {
         this.gramatica = gramatica;
@@ -23,6 +24,70 @@ public class SLR {
         this.nextStateIndex = nextStateIndex;
         this.automat = automat;
         this.states = states;
+    }
+
+
+    private StareProductie convertProductie(Productie productie) {
+        StareProductie stareProductie = new StareProductie();
+        stareProductie.setProductie(productie);
+        stareProductie.setPredictii(getFollow1(productie.getLeft())); // seteaza lista de predictii in fct de follow
+
+        return stareProductie;
+
+    }
+
+    public List<StareProductie> getClosureTest() {
+        StareProductie testSt = convertProductie(gramatica.getProductii().get(0));
+        return getClosure(testSt);
+    }
+
+    // returneaza starea dupa aplicarea closure pe productie
+    public List<StareProductie> getClosure(StareProductie productie) {
+        List<StareProductie> finalClosure = new ArrayList<>();
+        finalClosure.add(productie);
+        List<StareProductie> tempClosure = new ArrayList<>();
+        while (tempClosure.size() != finalClosure.size()) {
+
+            tempClosure = new ArrayList<>();
+            for(StareProductie stp : finalClosure){
+                tempClosure.add(new StareProductie(stp.getProductie(),stp.getPunct(),stp.getPredictii()));
+            }
+
+            for (int i = 0 ; i < tempClosure.size(); i++) {
+                if (!shouldComputeClosure(finalClosure.get(i))) {// daca nu se poate aplica closure | e punct in fata term
+                    continue;
+                }
+                String nextToken = finalClosure.get(i).nextSymbol(); // e neterminal simbolul de dupa punct
+                for (Productie productie1 : gramatica.getProductiiNeterminal(nextToken)) {
+                    List<String> rightProd = Arrays.asList(productie1.getRight().split("[|]"));
+                    for (String pr : rightProd) {
+                        Productie newProd = new Productie(productie1.getLeft().trim(), pr.trim());
+
+                        StareProductie newst = convertProductie(newProd);
+                        if (!finalClosure.contains(newst)) {
+                            finalClosure.add(newst);
+                        }
+
+                    }
+                }
+            }
+        }
+
+        return finalClosure;
+
+    }
+
+    private boolean shouldComputeClosure(StareProductie stareProductie) {
+        if (stareProductie.shouldReduce()) { // punctul e la sfarsitul productiei
+            return false;
+        }
+
+        String nextToken = stareProductie.nextSymbol();
+        if (gramatica.isTerminal(nextToken)) { // daca e terminal dupa punct nu se mai va mai aplica closure
+            return false;
+        }
+        return true;  //  => se mai poate aplica closure
+
     }
 
     public List<String> getFirst(String neterminal) {
@@ -42,6 +107,9 @@ public class SLR {
             }
         }
 
+        if(follows.size() == 0){
+            follows.add("$");
+        }
         return follows.stream().distinct().collect(Collectors.toList());
     }
 

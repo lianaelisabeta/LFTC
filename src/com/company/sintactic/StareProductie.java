@@ -1,8 +1,11 @@
 package com.company.sintactic;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
+//o productie dintr-o stare
 public class StareProductie {
     private Productie productie;
     private int punct = 0;
@@ -12,6 +15,32 @@ public class StareProductie {
         this.productie = productie;
         this.punct = punct;
         this.predictii = predictii;
+    }
+
+    public StareProductie() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StareProductie that = (StareProductie) o;
+
+        boolean okPredictii = true;
+        for(int i = 0; i<predictii.size();i++){
+            if(!predictii.get(i).equals(that.predictii.get(i))){
+                okPredictii = false;
+                break;
+            }
+        }
+        return punct == that.punct &&
+                Objects.equals(productie, that.productie) &&
+                okPredictii;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(productie, punct, predictii);
     }
 
     public Productie getProductie() {
@@ -38,15 +67,21 @@ public class StareProductie {
         this.predictii = predictii;
     }
 
-    public boolean shouldShift(){
+    public boolean shouldShift() {
         return this.punct < this.productie.getRight().length();
     }
 
-    public boolean shouldReduce(){
+    public boolean shouldReduce() {
         return this.punct == this.productie.getRight().length();
     }
 
-    public String nextSymbol(){
-        return String.valueOf(this.productie.getRight().charAt(punct));
+    public String nextSymbol() {
+        List<String> rightTokens = Arrays.asList(this.productie.getRight().split("\\s+"));
+
+        //return String.valueOf(this.productie.getRight().charAt(punct));
+        if (punct < rightTokens.size()) {
+            return rightTokens.get(punct);
+        }
+        return null;
     }
 }
