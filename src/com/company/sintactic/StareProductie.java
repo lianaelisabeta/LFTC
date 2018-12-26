@@ -27,11 +27,15 @@ public class StareProductie {
         StareProductie that = (StareProductie) o;
 
         boolean okPredictii = true;
-        for(int i = 0; i<predictii.size();i++){
-            if(!predictii.get(i).equals(that.predictii.get(i))){
+        if(predictii.size()!= that.predictii.size()){
+            okPredictii = false;
+        }
+        else{for(int i = 0; i<predictii.size();i++){
+            if(!predictii.contains(that.predictii.get(i))){
                 okPredictii = false;
                 break;
             }
+        }
         }
         return punct == that.punct &&
                 Objects.equals(productie, that.productie) &&
@@ -72,7 +76,8 @@ public class StareProductie {
     }
 
     public boolean shouldReduce() {
-        return this.punct == this.productie.getRight().length();
+        List<String> rightTokens = Arrays.asList(this.productie.getRight().split("\\s+"));
+        return this.punct == rightTokens.size();
     }
 
     public String nextSymbol() {

@@ -14,7 +14,7 @@ public class Main {
 //        analizor.getAtomi("cmmdc.txt");
 //        analizor.printAtoms("fip.txt","ts.txt");
 
-        FileUtils fileUtils = new FileUtils("gramatica.txt");
+        FileUtils fileUtils = new FileUtils("gramatica_seminar11.txt");
 //        System.out.println("Productii:");
         List<Productie> productii = fileUtils.getProductii();
 //        for (Productie productie : productii){
@@ -26,14 +26,14 @@ public class Main {
 //        for (String terminal : terminali){
 //            System.out.println(terminal);
 //        }
-
+//
 //        System.out.println();
 //        System.out.println("Neterminali:");
         List<String> neterminali = fileUtils.getNeterminali();
 //        for (String neterminal : neterminali){
 //            System.out.println(neterminal);
 //        }
-
+//
 
         Gramatica gramatica = new Gramatica(productii,"S'",terminali,neterminali);
 
@@ -44,12 +44,13 @@ public class Main {
             System.out.println(first);
         }*/
 
-        //List<String> follows = slr.getFollow("EXPRESIE");
-
+//        List<String> follows = slr.getFollow("S");
+//
 //        for(String follow : follows){
 //            System.out.println(follow);
 //        }
-        slr.getClosureTest();
+//        slr.getClosureTest();
+        slr.buildStari();
 
     }
 }

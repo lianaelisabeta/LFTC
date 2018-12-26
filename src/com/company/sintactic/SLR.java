@@ -2,18 +2,15 @@ package com.company.sintactic;
 
 import com.company.lexical.AF;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SLR {
     private Gramatica gramatica;
-    private int nextStateIndex;
+    private int nextStateIndex = 0;
     private AF automat;
-    private List<List<StareProductie>> colectiiCanonice;
-    private List<Map<String, List<String>>> states; // tabel
+    private List<List<StareProductie>> colectiiCanonice = new ArrayList<>(); // lista de stari ( stare = lista de stareProductie)
+    private List<Map<String, List<String>>> states = new ArrayList<>(); // tabel
 
     public SLR(Gramatica gramatica) {
         this.gramatica = gramatica;
@@ -26,6 +23,65 @@ public class SLR {
         this.states = states;
     }
 
+    public void buildStari() {
+        buildColectiiCanonice();
+    }
+
+    private void buildColectiiCanonice() { //Todo
+        List<StareProductie> I0 = getClosure(convertProductie(gramatica.getProductii().get(0)));
+        colectiiCanonice.add(I0);
+        states.add(new HashMap<>());
+        while (colectiiCanonice.size() > nextStateIndex) {
+            List<StareProductie> I = colectiiCanonice.get(nextStateIndex);
+            for (StareProductie stareProductie : I) {
+                if (stareProductie.shouldReduce()) {
+                    continue;
+                }
+                String token = stareProductie.nextSymbol();
+                List<StareProductie> nextState = goTo(I, token, nextStateIndex);
+                if (nextState.size() > 0) { // se duce in stare noua(care nu exista deja in colectia canonica)
+                    colectiiCanonice.add(nextState);
+                    //todo add to states
+                }
+            }
+
+            nextStateIndex++;
+
+        }
+    }
+
+    private void buildTable() {
+
+    }
+
+    //shift punct peste token => starea in care se ajunge
+    private List<StareProductie> goTo(List<StareProductie> state, String token, int numarStareCurenta) {
+
+        //List<StareProductie> nextState = new ArrayList<>();
+        List<StareProductie> tempState = new ArrayList<>();
+        for (StareProductie stareProductie : state) {
+            if (Objects.nonNull(stareProductie.nextSymbol())) {
+                if (stareProductie.nextSymbol().equals(token)) {
+                    StareProductie shiftProductie = new StareProductie(stareProductie.getProductie(), stareProductie.getPunct() + 1, stareProductie.getPredictii());
+                    //if (!colectiiCanonice.contains(shiftProductie)) { // nu se ajunge intr o stare existenta prin shift
+                    if (containsStareProductie(shiftProductie).size() == 0) {
+                        tempState.addAll(getClosure(shiftProductie));
+                    }
+                }
+            }
+        }
+        return tempState;
+    }
+
+    private List<Integer> containsStareProductie(StareProductie stareProductie) {
+        List<Integer> stari = new ArrayList<>();
+        for (int i = 0; i < colectiiCanonice.size(); i++) {
+            if (colectiiCanonice.get(i).contains(stareProductie)) {
+                stari.add(i);
+            }
+        }
+        return stari;
+    }
 
     private StareProductie convertProductie(Productie productie) {
         StareProductie stareProductie = new StareProductie();
@@ -49,11 +105,11 @@ public class SLR {
         while (tempClosure.size() != finalClosure.size()) {
 
             tempClosure = new ArrayList<>();
-            for(StareProductie stp : finalClosure){
-                tempClosure.add(new StareProductie(stp.getProductie(),stp.getPunct(),stp.getPredictii()));
+            for (StareProductie stp : finalClosure) {
+                tempClosure.add(new StareProductie(stp.getProductie(), stp.getPunct(), stp.getPredictii()));
             }
 
-            for (int i = 0 ; i < tempClosure.size(); i++) {
+            for (int i = 0; i < tempClosure.size(); i++) {
                 if (!shouldComputeClosure(finalClosure.get(i))) {// daca nu se poate aplica closure | e punct in fata term
                     continue;
                 }
@@ -105,9 +161,12 @@ public class SLR {
                 follows.addAll(getFollowIfTerminal(neterminal, productie));
                 follows.addAll(getFollowIfNeterminal(neterminal, productie));
             }
+            List<String> right = Arrays.asList(productie.getRight().split("\\s+"));
+            if (right.size() == 1 && right.get(0).equals(neterminal)) {
+                follows.addAll(getFollow1(productie.getLeft().trim()));
+            }
         }
-
-        if(follows.size() == 0){
+        if (follows.size() == 0) {
             follows.add("$");
         }
         return follows.stream().distinct().collect(Collectors.toList());

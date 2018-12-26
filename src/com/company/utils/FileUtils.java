@@ -39,7 +39,7 @@ public class FileUtils {
             parts = parts.stream().filter(part -> !part.matches("[A-Z_\t]+")).distinct().collect(Collectors.toList());
             terminali.addAll(parts);
         }
-
+        neterminali = neterminali.stream().distinct().collect(Collectors.toList());
         terminali = terminali.stream().filter(terminal -> terminal.length()>0).distinct().collect(Collectors.toList());
 
     }
