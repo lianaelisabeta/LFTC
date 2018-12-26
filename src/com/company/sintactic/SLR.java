@@ -1,36 +1,59 @@
 package com.company.sintactic;
 
-import com.company.lexical.AF;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class SLR {
     private Gramatica gramatica;
     private int nextStateIndex = 0;
-    private AF automat;
     private List<List<StareProductie>> colectiiCanonice = new ArrayList<>(); // lista de stari ( stare = lista de stareProductie)
-    private List<Map<String, List<String>>> states = new ArrayList<>(); // tabel
+    private List<Map<String, List<Actiune>>> tabelaStari = new ArrayList<>(); // tabel
 
     public SLR(Gramatica gramatica) {
         this.gramatica = gramatica;
     }
 
-    public SLR(Gramatica gramatica, int nextStateIndex, AF automat, List<Map<String, List<String>>> states) {
+    public SLR(Gramatica gramatica, int nextStateIndex, List<Map<String, List<Actiune>>> tabelaStari) {
         this.gramatica = gramatica;
         this.nextStateIndex = nextStateIndex;
-        this.automat = automat;
-        this.states = states;
+        this.tabelaStari = tabelaStari;
     }
 
     public void buildStari() {
         buildColectiiCanonice();
+        buildTable();
+        showTabel();
     }
 
-    private void buildColectiiCanonice() { //Todo
+    private void showTabel() {
+        for (int i = 0; i < tabelaStari.size(); i++) {
+            System.out.println("I" + i + ":");
+            for (Map.Entry<String, List<Actiune>> entry : tabelaStari.get(i).entrySet()) {
+
+                if (entry.getValue().size() > 0) {
+                    System.out.print(entry.getKey() + ": ");
+                    entry.getValue().forEach(actiune -> System.out.print(actiune + "; "));
+                }
+            }
+            System.out.println();
+        }
+    }
+
+    private boolean checkIfConflicts() {
+        for (Map<String, List<Actiune>> map : tabelaStari) {
+            for (Map.Entry<String, List<Actiune>> entry : map.entrySet()) {
+                if (entry.getValue().stream().distinct().count() > 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+
+    private void buildColectiiCanonice() {
         List<StareProductie> I0 = getClosure(convertProductie(gramatica.getProductii().get(0)));
         colectiiCanonice.add(I0);
-        states.add(new HashMap<>());
         while (colectiiCanonice.size() > nextStateIndex) {
             List<StareProductie> I = colectiiCanonice.get(nextStateIndex);
             for (StareProductie stareProductie : I) {
@@ -41,17 +64,60 @@ public class SLR {
                 List<StareProductie> nextState = goTo(I, token, nextStateIndex);
                 if (nextState.size() > 0) { // se duce in stare noua(care nu exista deja in colectia canonica)
                     colectiiCanonice.add(nextState);
-                    //todo add to states
                 }
             }
-
             nextStateIndex++;
-
         }
     }
 
     private void buildTable() {
+        initTabel();
+        for (int i = 0; i < colectiiCanonice.size(); i++) {
+            List<StareProductie> stare = colectiiCanonice.get(i);
+            for (StareProductie productie : stare) {
 
+                if (productie.shouldReduce()) {
+                    if (productie.getProductie().getLeft().equals("S'") && i > 0) {
+                        tabelaStari.get(i).get("$").add(new Actiune(TipActiune.ACCEPT));
+                        continue;
+                    }
+                    int nrRegula = gramatica.getProductii().indexOf(productie.getProductie());
+                    for (String predictie : productie.getPredictii()) {
+                        tabelaStari.get(i).get(predictie).add(new Actiune(TipActiune.REDUCE, nrRegula));
+                    }
+                    continue;
+                }
+
+                String token = productie.nextSymbol();
+                StareProductie shifted = new StareProductie(productie.getProductie(), productie.getPunct() + 1, productie.getPredictii());
+                List<Integer> statesToGoTo = containsStareProductie(shifted);
+                tabelaStari.get(i).put(token, new ArrayList<>());
+                for (Integer noStare : statesToGoTo) {
+                    Actiune actiune = new Actiune(TipActiune.SHIFT, noStare);
+                    if (!tabelaStari.get(i).get(token).contains(actiune)) {
+                        tabelaStari.get(i).get(token).add(actiune);
+                    }
+                }
+            }
+
+
+        }
+    }
+
+    private void initTabel() {
+        for (int i = 0; i < colectiiCanonice.size(); i++) { //pentru fiecare stare
+            tabelaStari.add(new HashMap<>());
+            for (String neterminal : gramatica.getNeterminali()) {
+                if (neterminal.equals("S'")) {
+                    continue;
+                }
+                tabelaStari.get(i).put(neterminal, new ArrayList<>());
+            }
+            for (String terminal : gramatica.getTerminali()) {
+                tabelaStari.get(i).put(terminal, new ArrayList<>());
+            }
+            tabelaStari.get(i).put("$", new ArrayList<>());
+        }
     }
 
     //shift punct peste token => starea in care se ajunge
