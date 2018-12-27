@@ -23,7 +23,10 @@ public class FileUtils {
 
             while (null != (line = br.readLine())) {
                 String[] str = line.split("->");
-                productii.add(new Productie(str[0], str[1]));
+                List<String> rightProd = Arrays.asList(str[1].split("[|]"));
+                for(String right : rightProd){
+                    productii.add(new Productie(str[0], right));
+                }
                 neterminali.add(str[0].replace(" ",""));
             }
         } catch (Exception e) {

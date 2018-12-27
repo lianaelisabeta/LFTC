@@ -25,6 +25,70 @@ public class SLR {
         showTabel();
     }
 
+    public Stack<Integer> parseSecv(List<String> secv){
+        secv.add("$");
+        List<String> temp = new ArrayList<>();
+        temp.add("$");
+        temp.add("0");
+        Stack<Integer> sirProductii = new Stack<>();
+        int i = 0;
+        boolean isAccepted = false;
+        while(i< secv.size() && !isAccepted){
+            int stare = Integer.parseInt(temp.get(temp.size()-1));
+            if(tabelaStari.get(stare).get(secv.get(i)).size() == 1){
+                Actiune actiune = tabelaStari.get(stare).get(secv.get(i)).get(0);
+                switch (actiune.getTipActiune()){
+                    case SHIFT:
+                        temp.add(secv.get(i));
+                        temp.add(""+actiune.getNumar());
+                        i++;
+                        break;
+
+                    case REDUCE:
+                        String left = gramatica.getProductii().get(actiune.getNumar()).getLeft();
+                        List<String> rightParts = Arrays.asList(gramatica.getProductii().get(actiune.getNumar()).getRight().split("\\s+"));
+
+                        int jR = rightParts.size()-1;
+                        int jT = temp.size()-2;
+                        while(jR>=0 && rightParts.get(jR).equals(temp.get(jT))){ // elimina partea dreapta a productiei
+                            temp.remove(temp.size()-1);
+                            temp.remove(temp.size()-1);
+                            jR--;
+                            jT = temp.size()-2;
+                        }
+
+                        int stareR = Integer.parseInt(temp.get(temp.size()-1));
+                        if(tabelaStari.get(stareR).get(left).size() == 1){
+                            temp.add(left);
+                            temp.add(""+tabelaStari.get(stareR).get(left).get(0).getNumar());
+                            sirProductii.push(actiune.getNumar());
+                        }
+                        else
+                        {
+                            throw new RuntimeException("Eroare: secventa invalida.");
+                        }
+                        break;
+
+                    case ACCEPT:
+                        if(i != secv.size()-1){
+                            throw new RuntimeException("Secventa neacceptata.");
+                        }
+                        isAccepted = true;
+                        break;
+                }
+            }
+            else{
+                throw new RuntimeException("Eroare: secventa invalida.");
+            }
+        }
+        if(!isAccepted){
+            throw new RuntimeException("Secventa neacceptata.");
+        }
+        return sirProductii;
+
+    }
+
+
     private void showTabel() {
         for (int i = 0; i < tabelaStari.size(); i++) {
             System.out.println("I" + i + ":");
