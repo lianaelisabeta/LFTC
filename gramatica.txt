@@ -1,8 +1,8 @@
 S' -> PROGRAM
 PROGRAM -> HEADER int main ( ) { DECLLIST LISTA_INSTRUCTIUNI }
-HEADER -> #include<iostream> | #include<string>
+HEADER -> #include<iostream> #include<string>
 DECLLIST -> DECL ; | DECL ; DECLLIST
-DECL -> TYPE id = CONST	| TYPE id [ intreg_pozitiv ] | TYPE id
+DECL -> TYPE id = const	| TYPE id [ const ] | TYPE id
 TYPE -> int | char | double | std::string
 LISTA_INSTRUCTIUNI -> INSTRUCTIUNE | INSTRUCTIUNE LISTA_INSTRUCTIUNI
 INSTRUCTIUNE -> INSTRUCTIUNE_SIMPLA | INSTRUCTIUNE_COMPUSA
@@ -10,15 +10,12 @@ INSTRUCTIUNE_SIMPLA -> ATRIBUIRE ; | OPERATIEIO ;
 ATRIBUIRE -> id = EXPRESIE
 EXPRESIE -> TERMEN + TERMEN	| TERMEN - TERMEN | TERMEN + EXPRESIE | TERMEN - EXPRESIE | TERMEN
 TERMEN -> FACTOR * FACTOR  | FACTOR / FACTOR | FACTOR * TERMEN | FACTOR / TERMEN | FACTOR
-FACTOR -> ( EXPRESIE ) | id | CONST | id [ INDEX ]
+FACTOR -> ( EXPRESIE ) | id | const | id [ const ]
 OPERATIEIO -> OPCITIRE | OPSCRIERE
-OPCITIRE -> std::cin >> id | std::cin >> id [ INDEX ]
-OPSCRIERE -> std::cout << id | std::cout << id [ INDEX ] | std::cout << std::endl | std::cout << CONST
+OPCITIRE -> std::cin >> id | std::cin >> id [ const ]
+OPSCRIERE -> std::cout << id | std::cout << id [ const ] | std::cout << std::endl | std::cout << const
 INSTRUCTIUNE_COMPUSA -> INSTR_WHILE | INSTR_IF
 INSTR_WHILE -> while ( CONDITIE ) { LISTA_INSTRUCTIUNI }
 INSTR_IF -> if ( CONDITIE ) { LISTA_INSTRUCTIUNI } | if ( CONDITIE ) { LISTA_INSTRUCTIUNI } else { LISTA_INSTRUCTIUNI }
 CONDITIE -> EXPRESIE OP_RELATIONAL EXPRESIE
 OP_RELATIONAL -> = | != | < | > | <= | >=
-CONST -> intreg | real | caracter | sir_de_caractere
-INTREG -> intreg_pozitiv | intreg_negativ
-INDEX -> id | intreg_pozitiv

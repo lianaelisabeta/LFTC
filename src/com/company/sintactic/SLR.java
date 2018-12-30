@@ -1,5 +1,7 @@
 package com.company.sintactic;
 
+import com.company.utils.DecodificareFIP;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -65,7 +67,7 @@ public class SLR {
                         }
                         else
                         {
-                            throw new RuntimeException("Eroare: secventa invalida.");
+                            throw new RuntimeException("Secventa neacceptata.");
                         }
                         break;
 
@@ -78,7 +80,7 @@ public class SLR {
                 }
             }
             else{
-                throw new RuntimeException("Eroare: secventa invalida.");
+                throw new RuntimeException("Secventa neacceptata.");
             }
         }
         if(!isAccepted){
@@ -90,6 +92,7 @@ public class SLR {
 
 
     private void showTabel() {
+        System.out.println("Tabel de analiza: ");
         for (int i = 0; i < tabelaStari.size(); i++) {
             System.out.println("I" + i + ":");
             for (Map.Entry<String, List<Actiune>> entry : tabelaStari.get(i).entrySet()) {
@@ -103,10 +106,10 @@ public class SLR {
         }
     }
 
-    private boolean checkIfConflicts() {
+    public boolean checkIfConflicts() {
         for (Map<String, List<Actiune>> map : tabelaStari) {
             for (Map.Entry<String, List<Actiune>> entry : map.entrySet()) {
-                if (entry.getValue().stream().distinct().count() > 1) {
+                if ((long) entry.getValue().size() > 1) {
                     return true;
                 }
             }
@@ -187,7 +190,6 @@ public class SLR {
     //shift punct peste token => starea in care se ajunge
     private List<StareProductie> goTo(List<StareProductie> state, String token, int numarStareCurenta) {
 
-        //List<StareProductie> nextState = new ArrayList<>();
         List<StareProductie> tempState = new ArrayList<>();
         for (StareProductie stareProductie : state) {
             if (Objects.nonNull(stareProductie.nextSymbol())) {
@@ -396,5 +398,10 @@ public class SLR {
             }
         }
         return firsts;
+    }
+
+    public Stack<Integer> checkProgram(String fip, DecodificareFIP decodificareFIP){
+        List<String> secv = decodificareFIP.getFipTokens(fip).stream().map(String::trim).filter(s -> !(s.equals("\n") || s.length()==0)).collect(Collectors.toList());
+        return parseSecv(secv);
     }
 }

@@ -35,19 +35,19 @@ public class AnalizorLexical {
             String st;
             while ((st = br.readLine()) != null)
             {String patternSeparatori= "((?<=;)|(?=;)|(?<=\\{)|(?=\\{)|(?<=\\})|(?=\\})|(?<=[)])|(?=[)]))|(?<=[(])|(?=[(])";
-                String patternOperatori= "((?<=\\+)|(?=\\+)|(?<=\\-)|(?=\\-)|(?<=\\*)|(?=\\*)|(?<=\\/)|(?=\\/)|(?<=\\=)|(?=\\=)|(?<=\\<)|(?=\\<)|(?<=\\>)|(?=\\>)|(?<=\\<=)|(?=\\<=)|(?<=\\>=)|(?=\\>=)|(?<=\\==)|(?=\\==)|(?<=\\!=)|(?=\\!=)|(?<=\\>>)|(?=\\>>)|(?<=\\<<)|(?=\\<<))";
+                String patternOperatori= "((?<=\\+)|(?=\\+)|(?<=\\-)|(?=\\-)|(?<=\\*)|(?=\\*)|(?<=\\/)|(?=\\/)|(?<=\\=)|(?=\\=)|(?<=[\\>\\>])|(?=[\\>\\>])|(?<=[\\<\\<])|(?=[\\<\\<])|(?<=\\<)|(?=\\<)|(?<=\\>)|(?=\\>)|(?<=\\<=)|(?=\\<=)|(?<=\\>=)|(?=\\>=)|(?<=\\==)|(?=\\==)|(?<=\\!=)|(?=\\!=))";
 
                 String[] tokens= st.split("\\s+|"+patternSeparatori+"|"+patternOperatori );
                 for(int i=0;i<tokens.length;i++){
-
+                    tokens[i]=tokens[i].trim();
                     if(!tokens[i].contains(" ") && tokens[i].length()>0) {
 
                         if(i<tokens.length-1 &&simboluriSpeciale.eOperator(tokens[i]+tokens[i+1]))
                         {
-                            tokens[i]+=tokens[i+1];
+                            String s = tokens[i] + tokens[i+1];
 
-                            int cod = codificareAtomi.getCod(tokens[i]+tokens[i+1]);
-                            atomi.add(new Atom(tokens[i], cod, l));
+                            int cod = codificareAtomi.getCod(s);
+                            atomi.add(new Atom(s, cod, l));
 
                             i=i+2;
                         }

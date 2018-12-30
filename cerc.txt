@@ -1,6 +1,6 @@
 #include<iostream>
 #include<string>
-main()
+int main()
 {
   	double PI= 3.14;
 	double a;
