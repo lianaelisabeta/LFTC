@@ -15,10 +15,10 @@ public class Main {
 
     public static void main(String[] args) {
         AnalizorLexical analizor = new AnalizorLexical();
-        analizor.getAtomi("simpleSum.txt");
+        analizor.getAtomi("cerc.txt");
         analizor.printAtoms("fip.txt","ts.txt");
 
-        FileUtils fileUtils = new FileUtils("gramaticaSimpl.txt");
+        FileUtils fileUtils = new FileUtils("gramatica.txt");
 //        System.out.println("Productii:");
         List<Productie> productii = fileUtils.getProductii();
 //        for (Productie productie : productii){

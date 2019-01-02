@@ -1,10 +1,12 @@
 S' -> PROGRAM
-PROGRAM -> HEADER main ( ) { DECLLIST LISTA_INSTRUCTIUNI }
-HEADER -> #include<iostream>
+PROGRAM -> HEADER int main ( ) { BODY }
+HEADER -> #include<iostream> #include<string> | #include<iostream> | #include<string>
+BODY -> DECLLIST LISTA_INSTRUCTIUNI | DECLLIST
 DECLLIST -> DECL ; | DECL ; DECLLIST
-DECL -> TYPE id = const	| TYPE id
-TYPE -> int
+DECL -> TYPE id = const	| TYPE id [ const ] | TYPE id
+TYPE -> int | char | double | std::string
 LISTA_INSTRUCTIUNI -> INSTRUCTIUNE | INSTRUCTIUNE LISTA_INSTRUCTIUNI
-INSTRUCTIUNE -> ATRIBUIRE ;
-ATRIBUIRE -> id = const
-ATRIBUIRE -> id = id
+INSTRUCTIUNE -> INSTRUCTIUNE_SIMPLA
+INSTRUCTIUNE_SIMPLA -> ATRIBUIRE ;
+ATRIBUIRE -> id = EXPRESIE
+EXPRESIE -> id | const

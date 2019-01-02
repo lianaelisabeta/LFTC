@@ -7,8 +7,8 @@ int main()
 	double p;
 	double r;
 	std::cin >> r;
-	a = PI* r * r;
-	p = 2 * PI * r;
+	a = r * r * PI;
+	p = 2 * r * r;
 	std::cout << a;
 	std::cout << std::endl;
 	std::cout << p;
