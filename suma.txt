@@ -1,32 +1,15 @@
 #include<iostream>
-#include<string>
-main()
+int main()
 {
-    int a;
-    int b;
-
-    std::string hello = "Hello";
-    std::cin>>a;
-    std::cin>>b;
-    std::cout<<hello;
-    if(a==0){
-       std::cout<<b;
-    }
-    else{
-        if(b==0){
-            std::cout<<a;
-        }
-        else{
-            while(a!=b){
-        if(a>b){
-            a=a-b;
-        }
-        else{
-            b=b-a;
-        }
-    }
-        std::cout<<a;
-        }
-    }
-
+	int nr;
+	int suma;
+	int x;
+	suma = 0;
+	std::cin >> nr;
+	while (nr > 0) {
+		std::cin >> x;
+		suma = suma + x;
+		nr = nr - 1;
+	}
+	std::cout << suma;
 }
